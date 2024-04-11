@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load allauth account socialaccount %}
+{% block title %}
+login
+{% endblock title %}
+{% block content %}
+<div class="mt-28 flex flex-col items-center text-green-500">
+    <p class="">
+        If you have not created an account yet, then please
+        <a class="rounded bg-red-950 text-green-300 mt-5 p-2" href="{{ signup_url }}">sign up</a> first.
+    </p>
+    <form action="{% url 'login' %}" method="post" class="mb-10">
+        {% csrf_token %}
+
+        <div class="flex flex-col gap-3 mt-5 inputCont w-[330px]">
+            {% for field in form %}
+            <div>
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+            {% endfor %}
+            <div class="text-red-500"> {{form.non_field_errors}} </div>
+        </div>
+
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+     
+        <a href="{% url 'account_reset_password' %}"> Forget your password? 
+        </a>   
+        
+        <div>
+            <button type="submit" class="rounded bg-red-950 text-green-300 mt-5 p-2">
+                Sign In
+            </button>
+        </div>
+    </form>
+
+    {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+
+</div>
+
+{% endblock content %}
