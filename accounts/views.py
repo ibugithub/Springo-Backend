@@ -1,8 +1,4 @@
-from django.shortcuts import render, redirect
-from django.shortcuts import render
-from .forms import DonorProfileForm
-from .models import DonorProfile, User
-from allauth.account.views import LoginView
+from .models import User
 from rest_framework.generics import GenericAPIView
 from .serializers import UserRegisterSerializer, LoginSerializer, PasswordResetSerializer, SetNewPasswordSerializer, LogoutSerializer
 from rest_framework.response import Response
@@ -14,31 +10,6 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 # Create your views here.
-def hello_view(request):
-  return render(request, 'home.html')
-
-class LoginApi(LoginView):
-  print('Hello world I am in the loginApi class')
-  def dispatch(self, request, *args, **kwargs):
-      print('I am the dispatch method in the LoginApi subclass')
-      return super(LoginApi, self).dispatch(request, *args, **kwargs)
-  print('I am at the bottom of the dispatch method')
-
-  def form_valid(self, form):
-    print('I am in form valid method')
-
-
-def DonorProfileView(request): 
-  donor_profile, created = DonorProfile.objects.get_or_create(user=request.user)
-  form = DonorProfileForm(instance=donor_profile)
-  if request.method == 'POST':
-    form = DonorProfileForm(request.POST, instance=donor_profile)
-    if form.is_valid():
-      donor_profile = form.save(commit=False)
-      donor_profile.user = request.user
-      donor_profile.save()
-      return redirect('dashboard')
-  return render(request, 'dashboard.html', {'form': form})
 
 class RegisterUserView(GenericAPIView):
   serializer_class = UserRegisterSerializer
