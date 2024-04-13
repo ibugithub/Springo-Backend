@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'tracker',
     'rest_framework',
     'corsheaders',
-    'accounts'
+    'accounts',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 MIDDLEWARE = [
@@ -132,11 +133,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000"
+    "http://localhost:3000",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'accounts.User' 
 
@@ -155,7 +157,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=20),
+    "REFRESH_TOKEN_LIFETIME": timedelta(seconds=120),
     "AUTH_HEADER_TYPES": ("Bearer",),
 }

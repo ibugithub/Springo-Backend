@@ -17,14 +17,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields=['email', 'first_name', 'last_name', 'password', 'password2'] 
-  
   def validate(self, attrs):
     password = attrs.get('password', '')
     password2 = attrs.get('password2', '')
     if password != password2:
       raise serializers.ValidationError("Password do not match.")
     return attrs
-  
+
   def create(self, validated_data):
     user = User.objects.create_user(
       email = validated_data['email'],
@@ -51,10 +50,6 @@ class LoginSerializer(serializers.ModelSerializer):
 
     if not user:
       raise AuthenticationFailed("Invalid user credentials") 
-    
-    if not user.is_verified:
-      raise AuthenticationFailed("The Email isn't verified") 
-    
     token = user.user_token()
 
     return {
@@ -130,7 +125,6 @@ class LogoutSerializer(serializers.Serializer):
     try:
       token = RefreshToken(self.token) 
       token.blacklist()
-      print("I am in the try block of save method of logout serializer")
-
+      
     except TokenError:
       return self.fail("Bad_Token")

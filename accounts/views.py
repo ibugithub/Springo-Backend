@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import threading
 # Create your views here.
 
 class RegisterUserView(GenericAPIView):
@@ -17,15 +18,15 @@ class RegisterUserView(GenericAPIView):
   def post(self, request): 
     user_data = request.data
     serializer = self.serializer_class(data = user_data)
-    if serializer.is_valid(raise_exception=True):
+    if serializer.is_valid():
       serializer.save()
       user = serializer.data
-      send_code_to_user(user['email'])
+      thread = threading.Thread(target=send_code_to_user, args=(user['email'],))
+      thread.start()
       return Response ({
         'data': user,
         'message': f"{user['first_name']} {user['last_name']} Thanks for registering"
       }, status = status.HTTP_201_CREATED)
-    
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
   
 class VerifyEmailView(GenericAPIView):
@@ -95,4 +96,5 @@ class LogoutView(GenericAPIView):
     serializer = self.serializer_class(data=request.data) 
     serializer.is_valid(raise_exception=True) 
     serializer.save() 
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_200_OK)
+  
