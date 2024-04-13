@@ -15,6 +15,7 @@ class User(AbstractBaseUser, PermissionsMixin):
   is_staff = models.BooleanField(default=False)
   is_superuser = models.BooleanField(default=False)
   is_verified = models.BooleanField(default=False)
+  is_writer = models.BooleanField(default=False)
   date_joined = models.DateField(default=timezone.now)
   auth_provider = models.CharField(max_length=50, default=AUTH_PROVIDERS.get('email'))
   objects = UserManager() 
