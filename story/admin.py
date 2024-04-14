@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Company, Employee, Story, Transaction
+from .models import Story
 
-registerModel = [Company, Employee, Story, Transaction]
+registerModel = [ Story, ]
 admin.site.register(registerModel)
