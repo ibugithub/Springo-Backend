@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
+import os
+from dotenv import load_dotenv
+from dotenv import dotenv_values
+load_dotenv()
+env_vars = dotenv_values('.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-folnuu^hysfa%k2cn7fe$@n=fr13b-cd#ywib$2p$g14o&h%uf'
+SECRET_KEY = os.environ.get("SECRET_KEY") 
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == 'true'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -88,6 +95,11 @@ DATABASES = {
     }
 }
 
+dbUrl = os.environ.get("db_url")
+DATABASES['default'] = dj_database_url.parse(dbUrl)
+
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -147,9 +159,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587 
 EMAIL_USE_TLS = True  
-EMAIL_HOST_USER ='outsideworkibrahim@gmail.com'
-EMAIL_HOST_PASSWORD = 'vaed cjfc abgt utuw'
-
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_PASSWORD = env_vars.get('EMAIL_HOST_PASSWORD')
+print ('the password is', EMAIL_HOST_PASSWORD)
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
