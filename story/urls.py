@@ -19,4 +19,5 @@ urlpatterns = [
   path('create_story/', views.CreateStoryAPI.as_view()),
   path('show_story/', views.ShowStoryAPI.as_view()),
   path('check_isWriter/', views.IsWriterAPI.as_view()),
+  path('make_writer/', views.MakeWriterAPI.as_view()),
 ]

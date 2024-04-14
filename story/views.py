@@ -5,6 +5,7 @@ from .models import Story
 from .serializers import  StorySerializer
 from rest_framework.generics import GenericAPIView
 from .permissions import IsWriter
+from rest_framework.permissions import IsAuthenticated
 class CreateStoryAPI(APIView):
     def post(self, request):
       serializer = StorySerializer(data=request.data)
@@ -27,3 +28,11 @@ class IsWriterAPI(GenericAPIView):
       "msg": "A request from a writer"
     }
     return Response(data, status=status.HTTP_200_OK)
+
+class MakeWriterAPI(GenericAPIView):
+  permission_classes = [IsAuthenticated]
+  def get(self, request):
+    user = request.user
+    user.is_writer = True
+    user.save()
+    return Response({'message': 'User is now a writer'}, status=status.HTTP_200_OK)
