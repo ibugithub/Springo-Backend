@@ -41,7 +41,7 @@ class LoginSerializer(serializers.ModelSerializer):
   refresh_token = serializers.CharField( max_length=255, read_only=True )
   class Meta:
     model=User
-    fields=['username','full_name', 'password', 'access_token', 'refresh_token']
+    fields=['username', 'full_name', 'password', 'access_token', 'refresh_token']
 
   def validate( self, attrs ):
     username = attrs.get('username')

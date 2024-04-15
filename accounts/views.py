@@ -52,7 +52,15 @@ class LoginApiView(GenericAPIView):
   def post(self, request):
     serializer = self.serializer_class(data = request.data, context= {'request': request})
     serializer.is_valid(raise_exception=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    username = serializer.validated_data.get('username')
+    try:
+      user = User.objects.get(username=username)
+    except User.DoesNotExist:
+      return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    email = user.email
+    serializer.validated_data['email'] = email
+    print ('the serializer data is ', serializer.validated_data )
+    return Response(serializer.validated_data, status=status.HTTP_200_OK)
     
 class TestAuthenticationView(GenericAPIView):
   permission_classes = [IsAuthenticated]

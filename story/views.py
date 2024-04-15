@@ -14,6 +14,8 @@ class CreateStoryAPI(APIView):
       serializer = StorySerializer(data=request.data)
       if serializer.is_valid():
         print("the serializer is ", serializer)
+        serializer.save()
+        
         return Response(status=status.HTTP_201_CREATED, data=serializer.data)
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
