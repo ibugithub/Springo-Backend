@@ -9,6 +9,7 @@ AUTH_PROVIDERS = {'email':'email', 'google':'google', 'github':'github', 'facebo
 
 class User(AbstractBaseUser, PermissionsMixin): 
   email = models.EmailField(unique=True)
+  username = models.CharField(unique=True, max_length= 20, null=True)
   first_name = models.CharField(max_length=30 )
   last_name = models.CharField(max_length=30 )
   is_active = models.BooleanField(default=True)
@@ -19,10 +20,10 @@ class User(AbstractBaseUser, PermissionsMixin):
   date_joined = models.DateField(default=timezone.now)
   auth_provider = models.CharField(max_length=50, default=AUTH_PROVIDERS.get('email'))
   objects = UserManager() 
-  USERNAME_FIELD = 'email'
+  USERNAME_FIELD = 'username'
   REQUIRED_FIELDS = ['first_name', 'last_name']
   def __str__(self):
-    return self.email
+    return self.username
   
   @property
   def full_name(self):

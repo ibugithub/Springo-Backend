@@ -6,13 +6,17 @@ from .serializers import  StorySerializer
 from rest_framework.generics import GenericAPIView
 from .permissions import IsWriter
 from rest_framework.permissions import IsAuthenticated
+
 class CreateStoryAPI(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
+      print('the user is ', request.user)
       serializer = StorySerializer(data=request.data)
       if serializer.is_valid():
-        serializer.save()
+        print("the serializer is ", serializer)
         return Response(status=status.HTTP_201_CREATED, data=serializer.data)
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 class ShowStoryAPI(APIView):
   def get(self, request):

@@ -16,7 +16,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = User
-    fields=['email', 'first_name', 'last_name', 'password', 'password2'] 
+    fields=['username', 'email', 'first_name', 'last_name', 'password', 'password2'] 
   def validate(self, attrs):
     password = attrs.get('password', '')
     password2 = attrs.get('password2', '')
@@ -26,6 +26,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
   def create(self, validated_data):
     user = User.objects.create_user(
+      username=validated_data['username'],
       email = validated_data['email'],
       password = validated_data['password'],
       first_name = validated_data['first_name'],
@@ -34,26 +35,26 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     return user
   
 class LoginSerializer(serializers.ModelSerializer):
-  email = serializers.EmailField( max_length=55 )
+  username = serializers.CharField( max_length=55 )
   password = serializers.CharField( max_length=60, write_only=True )
   access_token = serializers.CharField( max_length=255, read_only=True )
   refresh_token = serializers.CharField( max_length=255, read_only=True )
   class Meta:
     model=User
-    fields=['email','full_name', 'password', 'access_token', 'refresh_token']
+    fields=['username','full_name', 'password', 'access_token', 'refresh_token']
 
   def validate( self, attrs ):
-    email = attrs.get('email')
+    username = attrs.get('username')
     password = attrs.get('password')
     request = self.context.get('request')
-    user = authenticate(request, email=email, password = password )
+    user = authenticate(request, username=username, password = password )
 
     if not user:
       raise AuthenticationFailed("Invalid user credentials") 
     token = user.user_token()
 
     return {
-      'email' : user.email,
+      'username' : user.username,
       'full_name' : user.full_name,
       'access_token' : str(token.get('access')),
       'refresh_token' : str(token.get('refresh')),
