@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Story
 from accounts.models import User
-from .serializers import  StorySerializer
+from .serializers import  StorySerializer, ShowStorySerializer
 from rest_framework.generics import GenericAPIView
 from .permissions import IsWriter
 from rest_framework.permissions import IsAuthenticated
@@ -14,7 +14,6 @@ class CreateStoryAPI(APIView):
       user = request.user.username
       serializer = StorySerializer(data=request.data, context={'request': request})
       if serializer.is_valid():
-        print("the serializer is ", serializer)
         serializer.save()
         return Response(status=status.HTTP_201_CREATED, data=serializer.data)
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -22,10 +21,17 @@ class CreateStoryAPI(APIView):
     
 class ShowStoryAPI(APIView):
   def get(self, request):
-    stories = Story.objects.all()
-    serializer = StorySerializer(stories, many=True)
+    stories = Story.objects.all().order_by('-id')
+    serializer = ShowStorySerializer(stories, many=True, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
-  
+
+class ShowIndeStoryAPI(APIView):
+  permission_classes=[IsAuthenticated, IsWriter]
+  def get(self, request):
+    user = request.user
+    stories = Story.objects.filter(author=user).order_by('-id')
+    serializer = ShowStorySerializer(stories, many=True, context={'request': request})
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 class IsWriterAPI(GenericAPIView):
   permission_classes = [IsWriter]
