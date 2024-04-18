@@ -32,6 +32,11 @@ class ShowIndeStoryAPI(APIView):
     serializer = ShowStorySerializer(stories, many=True, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+class ShowSingleStoryAPI(generics.RetrieveAPIView):
+  queryset = Story.objects.all()
+  serializer_class = ShowStorySerializer
+  lookup_field = 'id'
+
 class IsWriterAPI(GenericAPIView):
   permission_classes = [IsWriter]
   def get(self, request):
