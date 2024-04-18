@@ -7,5 +7,6 @@ urlpatterns = [
   path('show_inde_story/', views.ShowIndeStoryAPI.as_view()),
   path('check_isWriter/', views.IsWriterAPI.as_view()),
   path('make_writer/', views.MakeWriterAPI.as_view()),
-  
+  path('update/<int:pk>/', views.StoryUpdateAPIView.as_view()),
+  path('delete/<int:pk>/', views.StoryDeleteAPIView.as_view())
 ]

@@ -11,7 +11,7 @@ class StorySerializer(serializers.ModelSerializer):
 
 class ShowStorySerializer(serializers.ModelSerializer):
   author = serializers.SerializerMethodField()
-
+  
   def get_author(self, obj):
     return obj.author.username
   class Meta:
