@@ -1,7 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin 
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin 
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 from .managers import UserManager
 from rest_framework_simplejwt.tokens import RefreshToken
 
