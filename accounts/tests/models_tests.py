@@ -18,8 +18,6 @@ def test_user_creation():
   assert not user.is_staff
   assert not user.is_writer
 
-
-
 @pytest.mark.django_db
 def test_full_name():
   user = User.objects.create_user(username = 'testuser', email = 'test@gmail.com', first_name='Md Test', last_name="Hossain", password = 'testpassword')

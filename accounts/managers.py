@@ -12,20 +12,18 @@ class UserManager(BaseUserManager):
       raise ValueError(_("Please enter a valid email address")) 
     
 
-  def create_user(self, email, first_name, last_name, password=None, **extra_fields):
-    print('create user has been called')
+  def create_user(self, email, username, first_name, last_name, password=None, **extra_fields):
     if email:
       email = self.normalize_email(email)
       self.email_validator(email)
     else:
       raise ValueError('email must be specified')
-    user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
+    user = self.model(email=email, username = username, first_name=first_name, last_name=last_name, **extra_fields)
     user.set_password(password)
     user.save(using=self._db)
     return user  
   
-  def create_superuser(self, email, first_name, last_name, password=None, **extra_fields):
-    print('create super user has been called')
+  def create_superuser(self, email, username, first_name, last_name, password=None, **extra_fields):
     extra_fields.setdefault('is_staff', True)
     extra_fields.setdefault('is_superuser', True)
     extra_fields.setdefault('is_verified', True)
@@ -35,5 +33,5 @@ class UserManager(BaseUserManager):
     
     if extra_fields.get('is_superuser') is not True:
       raise ValueError(_("is_superuser must be true for admin users"))
-    user = self.create_user(email, first_name, last_name, password, **extra_fields)
+    user = self.create_user(email, username, first_name, last_name, password, **extra_fields)
     return user
